@@ -18,7 +18,7 @@
   
   <bean id = "jmsConnectionFactory" 
       class ="org.apache.activemq.ActiveMQConnectionFactory">
-      <property name="brokerURL" value="tcp://alarm.hlc.nscl.msu.edu:61616"></property>
+      <property name="brokerURL" value="tcp://alarm:61616"></property>
   </bean>
   
   <bean id="jms"
@@ -28,57 +28,18 @@
   </bean>
   
   <camelContext xmlns="http://camel.apache.org/schema/spring">
-  <route id="logs/csstudio">
-    <from uri="jms:topic:logs/cs-studio"/>
-    <to uri="elasticsearch://elasticsearch?operation=INDEX&amp;indexName=logs&amp;indexType=cs-studio&amp;ip=192.168.3.26"/>
-  </route>
-  <route id="alarm-controls_client">
-    <from uri="jms:topic:ALARM-CONTROLS_CLIENT"/>
-    <filter>
-      <simple>${body[TEXT]} != "IDLE"</simple>
-      <to uri="elasticsearch://elasticsearch?operation=INDEX&amp;indexName=alarms&amp;indexType=beast&amp;ip=192.168.3.26"/>
-    </filter>
-  </route>
   <route id="alarm_server">
     <from uri="jms:topic:ALARM_SERVER"/>
     <filter>
-      <simple>${body[TEXT]} != "IDLE"</simple>
-      <to uri="elasticsearch://elasticsearch?operation=INDEX&amp;indexName=alarms&amp;indexType=beast&amp;ip=192.168.3.26"/>
+      <simple>${body[TEXT]} not contains "IDLE"</simple>
+      <to uri="elasticsearch://elasticsearch?operation=INDEX&amp;indexName=alarms&amp;indexType=beast&amp;ip=elastic"/>
     </filter>
   </route>
   <route id="alarm_client">
     <from uri="jms:topic:ALARM_CLIENT"/>
     <filter>
-      <simple>${body[TEXT]} != "IDLE"</simple>
-      <to uri="elasticsearch://elasticsearch?operation=INDEX&amp;indexName=alarms&amp;indexType=beast&amp;ip=192.168.3.26"/>
-    </filter>
-  </route>
-  <route id="alarm_SRF_server">
-    <from uri="jms:topic:ALARM_SRF_SERVER"/>
-    <filter>
-      <simple>${body[TEXT]} != "IDLE"</simple>
-      <to uri="elasticsearch://elasticsearch?operation=INDEX&amp;indexName=alarms&amp;indexType=beast&amp;ip=192.168.3.26"/>
-    </filter>
-  </route>
-  <route id="alarm_SRF_client">
-    <from uri="jms:topic:ALARM_SRF_CLIENT"/>
-    <filter>
-      <simple>${body[TEXT]} != "IDLE"</simple>
-      <to uri="elasticsearch://elasticsearch?operation=INDEX&amp;indexName=alarms&amp;indexType=beast&amp;ip=192.168.3.26"/>
-    </filter>
-  </route>
-  <route id="alarm_900W_server">
-    <from uri="jms:topic:ALARM_900W_SERVER"/>
-    <filter>
-      <simple>${body[TEXT]} != "IDLE"</simple>
-      <to uri="elasticsearch://elasticsearch?operation=INDEX&amp;indexName=alarms&amp;indexType=beast&amp;ip=192.168.3.26"/>
-    </filter>
-  </route>
-  <route id="alarm_900w_client">
-    <from uri="jms:topic:ALARM_900W_CLIENT"/>
-    <filter>
-      <simple>${body[TEXT]} != "IDLE"</simple>
-      <to uri="elasticsearch://elasticsearch?operation=INDEX&amp;indexName=alarms&amp;indexType=beast&amp;ip=192.168.3.26"/>
+      <simple>${body[TEXT]} not contains "IDLE"</simple>
+      <to uri="elasticsearch://elasticsearch?operation=INDEX&amp;indexName=alarms&amp;indexType=beast&amp;ip=elastic"/>
     </filter>
   </route>
 </camelContext>
