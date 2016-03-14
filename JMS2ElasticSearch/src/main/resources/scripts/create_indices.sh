@@ -9,7 +9,6 @@ curl -XPUT 'http://localhost:9200/alarms'
 # Set the mapping
 curl -XPUT 'http://localhost:9200/alarms/_mapping/beast' -d'
 {
-  {
       "beast" : {
         "properties" : {
           "APPLICATION-ID" : {
@@ -55,5 +54,4 @@ curl -XPUT 'http://localhost:9200/alarms/_mapping/beast' -d'
           }
         }
       }
-    }
 }'
